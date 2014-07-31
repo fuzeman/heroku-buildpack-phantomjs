@@ -9,9 +9,9 @@ CACHE_DIR=$2
 VERSION="1.10.0"
 
 # Buildpack URL
-ARCHIVE_NAME=phantomjs-${VERSION}-linux-x86_64
-FILE_NAME=${ARCHIVE_NAME}.tar.bz2
-BUILDPACK_PHANTOMJS_PACKAGE=https://github.com/fuzeman/phantomjs/releases/download/${VERSION}/${FILE_NAME}
+PHANTOMJS_URL=https://github.com/fuzeman/phantomjs/releases/download/${VERSION}/phantomjs-${VERSION}-linux-x86_64.tar.bz2
+PHANTOMJS_ARCHIVE=phantomjs--linux-x86_64
+PHANTOMJS_FILE=phantomjs-${VERSION}-linux-x86_64.tar.bz2
 
 XVFB_URL=http://orm-buildpack.s3.amazonaws.com/Xvfb.tar.gz
 XVFB_ARCHIVE=Xvfb
@@ -19,9 +19,9 @@ XVFB_FILE=${XVFB_ARCHIVE}.tar.gz
 
 mkdir -p $CACHE_DIR
 
-if ! [ -e $CACHE_DIR/$FILE_NAME ]; then
+if ! [ -e $CACHE_DIR/$PHANTOMJS_FILE ]; then
   echo "-----> Fetching PhantomJS ${VERSION} binaries at ${BUILDPACK_PHANTOMJS_PACKAGE}"
-  curl $BUILDPACK_PHANTOMJS_PACKAGE -L -s -o $CACHE_DIR/$FILE_NAME
+  curl $PHANTOMJS_URL -L -s -o $CACHE_DIR/$PHANTOMJS_FILE
 fi
 
 if ! [ -e $CACHE_DIR/$XVFB_FILE ]; then
@@ -32,17 +32,20 @@ fi
 mkdir -p $BUILD_DIR/vendor
 
 echo "-----> Extracting PhantomJS ${VERSION} binaries to ${BUILD_DIR}/vendor/phantomjs"
-mkdir -p $CACHE_DIR/$ARCHIVE_NAME
-tar jxfv $CACHE_DIR/$FILE_NAME -C $CACHE_DIR
-mv $CACHE_DIR/$ARCHIVE_NAME $BUILD_DIR/vendor/phantomjs
+mkdir -p $CACHE_DIR/$PHANTOMJS_ARCHIVE
+tar jxfv $CACHE_DIR/$PHANTOMJS_FILE -C $CACHE_DIR
+ls $CACHE_DIR/$PHANTOMJS_ARCHIVE
+mv $CACHE_DIR/$PHANTOMJS_ARCHIVE $BUILD_DIR/vendor/phantomjs
 
 echo "-----> Extracting Xvfb binaries to ${BUILD_DIR}/vendor/xvfb"
 mkdir -p $CACHE_DIR/$XVFB_ARCHIVE
-tar zxfv $CACHE_DIR/$XVFB_FILE -C $CACHE_DIR
+tar zxfv $CACHE_DIR/$XVFB_FILE -C $CACHE_DIR/$XVFB_ARCHIVE
+cd $CACHE_DIR
+ls $CACHE_DIR/$XVFB_ARCHIVE
 mv $CACHE_DIR/$XVFB_ARCHIVE $BUILD_DIR/vendor/xvfb
 
 echo "-----> exporting PATH and LIBRARY_PATH"
 PROFILE_PATH="$BUILD_DIR/.profile.d/phantomjs.sh"
 mkdir -p $(dirname $PROFILE_PATH)
-echo 'export PATH="$PATH:vendor/phantomjs/bin:vendor/xvfb/bin"' >> $PROFILE_PATH
-echo 'export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:vendor/phantomjs/lib:vendor/xvfb/lib"' >> $PROFILE_PATH
+echo 'export PATH="$PATH:/app/vendor/phantomjs/bin:/app/vendor/xvfb/bin"' >> $PROFILE_PATH
+echo 'export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/app/vendor/phantomjs/lib:/app/vendor/xvfb/lib"' >> $PROFILE_PATH
