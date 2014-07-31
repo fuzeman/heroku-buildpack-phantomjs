@@ -6,12 +6,12 @@ BUILD_DIR=$1
 CACHE_DIR=$2
 
 # config
-VERSION="1.10.0"
+VERSION="1.10.1"
 
 # Buildpack URL
 PHANTOMJS_URL=https://github.com/fuzeman/phantomjs/releases/download/${VERSION}/phantomjs-${VERSION}-linux-x86_64.tar.bz2
-PHANTOMJS_ARCHIVE=phantomjs--linux-x86_64
-PHANTOMJS_FILE=phantomjs-${VERSION}-linux-x86_64.tar.bz2
+PHANTOMJS_ARCHIVE=phantomjs-${VERSION}-linux-x86_64
+PHANTOMJS_FILE=${PHANTOMJS_ARCHIVE}.tar.bz2
 
 XVFB_URL=http://orm-buildpack.s3.amazonaws.com/Xvfb.tar.gz
 XVFB_ARCHIVE=Xvfb
@@ -33,15 +33,15 @@ mkdir -p $BUILD_DIR/vendor
 
 echo "-----> Extracting PhantomJS ${VERSION} binaries to ${BUILD_DIR}/vendor/phantomjs"
 mkdir -p $CACHE_DIR/$PHANTOMJS_ARCHIVE
-tar jxfv $CACHE_DIR/$PHANTOMJS_FILE -C $CACHE_DIR
-ls $CACHE_DIR/$PHANTOMJS_ARCHIVE
+tar jxf $CACHE_DIR/$PHANTOMJS_FILE -C $CACHE_DIR
+ls -l $CACHE_DIR/$PHANTOMJS_ARCHIVE
 mv $CACHE_DIR/$PHANTOMJS_ARCHIVE $BUILD_DIR/vendor/phantomjs
 
 echo "-----> Extracting Xvfb binaries to ${BUILD_DIR}/vendor/xvfb"
 mkdir -p $CACHE_DIR/$XVFB_ARCHIVE
-tar zxfv $CACHE_DIR/$XVFB_FILE -C $CACHE_DIR/$XVFB_ARCHIVE
+tar zxf $CACHE_DIR/$XVFB_FILE -C $CACHE_DIR/$XVFB_ARCHIVE
 cd $CACHE_DIR
-ls $CACHE_DIR/$XVFB_ARCHIVE
+ls -l $CACHE_DIR/$XVFB_ARCHIVE
 mv $CACHE_DIR/$XVFB_ARCHIVE $BUILD_DIR/vendor/xvfb
 
 echo "-----> exporting PATH and LIBRARY_PATH"
