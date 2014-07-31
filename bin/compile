@@ -38,7 +38,7 @@ mv $CACHE_DIR/$ARCHIVE_NAME $BUILD_DIR/vendor/phantomjs
 
 echo "-----> Extracting Xvfb binaries to ${BUILD_DIR}/vendor/xvfb"
 mkdir -p $CACHE_DIR/$XVFB_ARCHIVE
-tar jxf $CACHE_DIR/$XVFB_FILE -C $CACHE_DIR
+tar zxf $CACHE_DIR/$XVFB_FILE -C $CACHE_DIR
 mv $CACHE_DIR/$XVFB_ARCHIVE $BUILD_DIR/vendor/xvfb
 
 echo "-----> exporting PATH and LIBRARY_PATH"
