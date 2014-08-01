@@ -6,7 +6,7 @@ BUILD_DIR=$1
 CACHE_DIR=$2
 
 # config
-VERSION="1.10.4"
+VERSION="1.10.0"
 GLIBC="2.11.1"
 
 # Buildpack URL
