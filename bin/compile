@@ -7,16 +7,17 @@ CACHE_DIR=$2
 
 # config
 VERSION="1.10.4"
+GLIBC="2.11.1"
 
 # Buildpack URL
-PHANTOMJS_URL=https://github.com/fuzeman/phantomjs/releases/download/${VERSION}/phantomjs-${VERSION}-linux-x86_64.tar.bz2
-PHANTOMJS_ARCHIVE=phantomjs-${VERSION}-linux-x86_64
+PHANTOMJS_ARCHIVE=phantomjs-${VERSION}-linux-x86_64-glibc_${GLIBC}
 PHANTOMJS_FILE=${PHANTOMJS_ARCHIVE}.tar.bz2
+PHANTOMJS_URL=https://github.com/fuzeman/phantomjs/releases/download/${VERSION}/${PHANTOMJS_FILE}
 
 mkdir -p $CACHE_DIR
 
 if ! [ -e $CACHE_DIR/$PHANTOMJS_FILE ]; then
-  echo "-----> Fetching PhantomJS ${VERSION} binaries at ${BUILDPACK_PHANTOMJS_PACKAGE}"
+  echo "-----> Fetching PhantomJS ${VERSION} binaries at ${PHANTOMJS_URL}"
   curl $PHANTOMJS_URL -L -s -o $CACHE_DIR/$PHANTOMJS_FILE
 fi
 
